@@ -1,0 +1,9 @@
+ACTIVIDAD 1.6 - NODO MAESTRO
+Equipo: LAPTOP-G35EVB19-KAREN
+Procesos MPI: 3
+Clave objetivo: ZZZZZ
+Nodo 1 | Revisadas: 30233088 | Encontrado: 0 | Cancelado: 0
+Nodo 2 | Revisadas: 12957528 | Encontrado: 1 | Cancelado: 0
+Tiempo paralelo: 0.0716999
+Total revisadas: 43190616
+Nodo ganador: 2

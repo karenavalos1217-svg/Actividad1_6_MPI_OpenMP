@@ -1,0 +1,15 @@
+ACTIVIDAD 1.6 - BUSQUEDA DISTRIBUIDA
+Equipo: LAPTOP-G35EVB19-KAREN
+Nodo MPI: 1
+Rango inicial: 0
+Rango final exclusivo: 19591041024
+Clave objetivo: AAAAA7B
+Registro detallado: NO
+Hilos OpenMP activos: 12
+
+RESULTADOS DEL NODO
+Combinaciones revisadas: 1785
+Tiempo: 0.589505 segundos
+Clave encontrada: SI
+Hilo ganador: 1
+Cancelado por el maestro: NO

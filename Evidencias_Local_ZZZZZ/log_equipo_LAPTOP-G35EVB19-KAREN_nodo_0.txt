@@ -1,0 +1,11 @@
+ACTIVIDAD 1.6 - NODO MAESTRO
+Equipo: LAPTOP-G35EVB19-KAREN
+Procesos: 5
+Clave objetivo: ZZZZZ
+Resultado del nodo 3 | Revisadas: 12957074 | Encontrado: 1 | Cancelado: 0
+Resultado del nodo 1 | Revisadas: 12648448 | Encontrado: 0 | Cancelado: 1
+Resultado del nodo 4 | Revisadas: 12525568 | Encontrado: 0 | Cancelado: 1
+Resultado del nodo 2 | Revisadas: 14446592 | Encontrado: 0 | Cancelado: 1
+Tiempo paralelo: 1.1428
+Combinaciones revisadas: 52577682
+Nodo ganador: 3

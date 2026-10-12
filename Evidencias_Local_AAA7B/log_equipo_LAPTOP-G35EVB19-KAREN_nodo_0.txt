@@ -1,0 +1,11 @@
+ACTIVIDAD 1.6 - NODO MAESTRO
+Equipo: LAPTOP-G35EVB19-KAREN
+Procesos: 5
+Clave objetivo: AAA7B
+Resultado del nodo 1 | Revisadas: 1190 | Encontrado: 1 | Cancelado: 0
+Resultado del nodo 4 | Revisadas: 28672 | Encontrado: 0 | Cancelado: 1
+Resultado del nodo 2 | Revisadas: 20480 | Encontrado: 0 | Cancelado: 1
+Resultado del nodo 3 | Revisadas: 24576 | Encontrado: 0 | Cancelado: 1
+Tiempo paralelo: 0.0156302
+Combinaciones revisadas: 74918
+Nodo ganador: 1

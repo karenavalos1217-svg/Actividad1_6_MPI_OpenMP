@@ -1,0 +1,226 @@
+
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <limits>
+#include <mpi.h>
+#include <omp.h>
+
+using namespace std;
+
+const char ALFABETO[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+bool validarClave(const string& clave) {
+    if (clave.empty() || clave.length() > 10) {
+        return false;
+    }
+
+    for (char c : clave) {
+        bool letra = (c >= 'A' && c <= 'Z');
+        bool numero = (c >= '0' && c <= '9');
+
+        if (!letra && !numero) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+unsigned long long calcularCombinaciones(int longitud) {
+    unsigned long long total = 1;
+
+    for (int i = 0; i < longitud; i++) {
+        total *= 36ULL;
+    }
+
+    return total;
+}
+
+void convertirIndiceATexto(
+    unsigned long long indice,
+    char* candidato,
+    int longitud
+) {
+    for (int i = longitud - 1; i >= 0; i--) {
+        candidato[i] = ALFABETO[indice % 36];
+        indice /= 36;
+    }
+
+    candidato[longitud] = '\0';
+}
+
+void mostrarIntegrantes() {
+    cout << "Avalos Oliva Karen Lizeth\n";
+    cout << "Chavez Torres Oliver Daniel\n";
+    cout << "Ramirez Arvizu Fernando David\n";
+}
+
+void mostrarMenu() {
+    cout << "\nACTIVIDAD 1.6 - FUERZA BRUTA MPI + OPENMP\n";
+    cout << "1. Ingresar clave personalizada\n";
+    cout << "2. Ejecutar busqueda secuencial\n";
+    cout << "3. Ejecutar busqueda paralela distribuida\n";
+    cout << "4. Mostrar comparativa de tiempos\n";
+    cout << "5. Salir\n";
+    cout << "Opcion: ";
+}
+
+void busquedaSecuencial(const string& clave) {
+    if (clave.empty()) {
+        cout << "\nPrimero debes ingresar una clave en la opcion 1.\n";
+        return;
+    }
+
+    int longitud = static_cast<int>(clave.length());
+    unsigned long long total = calcularCombinaciones(longitud);
+
+    char* candidato = new char[longitud + 1];
+
+    bool encontrado = false;
+    unsigned long long combinacionesRevisadas = 0;
+    unsigned long long indiceEncontrado = 0;
+
+    cout << "\nINICIANDO BUSQUEDA SECUENCIAL\n";
+    cout << "Clave objetivo: " << clave << "\n";
+    cout << "Total de combinaciones posibles: " << total << "\n";
+
+    double inicio = MPI_Wtime();
+
+    for (unsigned long long indice = 0; indice < total; indice++) {
+        convertirIndiceATexto(indice, candidato, longitud);
+        combinacionesRevisadas++;
+
+        if (strcmp(candidato, clave.c_str()) == 0) {
+            encontrado = true;
+            indiceEncontrado = indice;
+            break;
+        }
+    }
+
+    double fin = MPI_Wtime();
+
+    cout << "\nRESULTADOS DE BUSQUEDA SECUENCIAL\n";
+
+    if (encontrado) {
+        cout << "Clave encontrada: " << candidato << "\n";
+        cout << "Indice encontrado: " << indiceEncontrado << "\n";
+    }
+    else {
+        cout << "Clave no encontrada.\n";
+    }
+
+    cout << "Combinaciones revisadas: "
+        << combinacionesRevisadas << "\n";
+
+    cout << "Tiempo secuencial: "
+        << (fin - inicio) << " segundos\n";
+
+    cout << "Procesos utilizados en la busqueda: 1\n";
+    cout << "Hilos utilizados en la busqueda: 1\n";
+
+    delete[] candidato;
+}
+
+
+int main(int argc, char* argv[]) {
+    MPI_Init(&argc, &argv);
+
+    int rank, procesos;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &procesos);
+
+    int opcion = 0;
+    string clave;
+
+    if (rank == 0) {
+        mostrarIntegrantes();
+        cout << "\nNodo maestro iniciado.\n";
+        cout << "Procesos MPI: " << procesos << "\n";
+        cout << "Hilos OpenMP disponibles: "
+            << omp_get_max_threads() << "\n";
+    }
+
+    do {
+        if (rank == 0) {
+            mostrarMenu();
+
+            if (!(cin >> opcion)) {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                opcion = 0;
+            }
+        }
+
+        MPI_Bcast(&opcion, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+        switch (opcion) {
+        case 1:
+            if (rank == 0) {
+                cout << "\nIngresa una clave (A-Z, 0-9): ";
+                cin >> clave;
+
+                if (validarClave(clave)) {
+                    int longitud = static_cast<int>(clave.length());
+
+                    cout << "Clave aceptada: " << clave << "\n";
+                    cout << "Longitud: " << longitud << "\n";
+                    cout << "Combinaciones posibles: "
+                        << calcularCombinaciones(longitud) << "\n";
+
+                    char* candidato = new char[longitud + 1];
+                    convertirIndiceATexto(0, candidato, longitud);
+
+                    cout << "Primera combinacion: "
+                        << candidato << "\n";
+
+                    delete[] candidato;
+                }
+                else {
+                    cout << "Clave invalida. Usa de 1 a 10 "
+                        << "caracteres A-Z y 0-9.\n";
+                    clave.clear();
+                }
+            }
+            break;
+
+
+        case 2:
+            if (rank == 0) {
+                busquedaSecuencial(clave);
+            }
+            break;
+
+
+        case 3:
+            if (rank == 0) {
+                cout << "\nBusqueda distribuida pendiente "
+                    << "de implementar.\n";
+            }
+            break;
+
+        case 4:
+            if (rank == 0) {
+                cout << "\nComparativa pendiente "
+                    << "de implementar.\n";
+            }
+            break;
+
+        case 5:
+            if (rank == 0) {
+                cout << "\nFinalizando programa...\n";
+                mostrarIntegrantes();
+            }
+            break;
+
+        default:
+            if (rank == 0) {
+                cout << "\nOpcion no valida.\n";
+            }
+        }
+
+    } while (opcion != 5);
+
+    MPI_Finalize();
+    return 0;
+}
